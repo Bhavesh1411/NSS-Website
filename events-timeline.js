@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.timeline-card');
     cards.forEach((card, i) => {
       if (!card.dataset.img) {
-        card.dataset.img = `https://picsum.photos/800/600?random=${i + 100}`;
+        card.dataset.img = 'https://placehold.co/800x600';
       }
     });
 
