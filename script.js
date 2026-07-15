@@ -322,16 +322,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Marquee Timeline
+    //by adarsh
     const marqueeTl = gsap.to(marqueeGrid, {
       xPercent: -50,
       duration: 25,
       ease: "none",
-      repeat: -1,
-      paused: true
+      repeat: -1
     });
 
-    marqueeWrapper.addEventListener('mouseenter', () => marqueeTl.play());
-    marqueeWrapper.addEventListener('mouseleave', () => marqueeTl.pause());
+    marqueeWrapper.addEventListener('mouseenter', () => marqueeTl.pause());
+    marqueeWrapper.addEventListener('mouseleave', () => marqueeTl.play());
+    //by adarsh
     
     // Entrance for standalone page elements
     gsap.to('.team-title .letter', {
