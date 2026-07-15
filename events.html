@@ -56,6 +56,33 @@
       </div>
     </section>
     
+    <!-- Filter Bar -->
+    <section class="filter-bar-section" id="filter-bar">
+      <div class="container">
+        <div class="filter-bar">
+          <!-- Search Input -->
+          <div class="filter-search-wrap">
+            <span class="filter-search-icon" aria-hidden="true">🔍</span>
+            <input
+              type="search"
+              id="event-search"
+              class="filter-search-input"
+              placeholder="Search events…"
+              aria-label="Search events"
+              autocomplete="off"
+            />
+            <button class="filter-clear-btn" id="filter-clear" aria-label="Clear search" title="Clear" hidden>✕</button>
+          </div>
+          <!-- Category Chips -->
+          <div class="filter-chips" role="group" aria-label="Filter by category" id="filter-chips">
+            <button class="filter-chip is-active" data-tag="all" id="chip-all">All</button>
+          </div>
+        </div>
+        <!-- No results message -->
+        <p class="filter-no-results" id="filter-no-results" hidden>No events match your search.</p>
+      </div>
+    </section>
+
     <!-- Timeline Section (populated by events-timeline.js) -->
     <section id="timeline" class="timeline-section section-padding">
       <div class="container">
@@ -63,6 +90,7 @@
 
       </div>
     </section>
+
 
     <!-- Contact & Footer -->
     <footer id="contact" class="footer">

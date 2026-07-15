@@ -44,6 +44,147 @@
 }
 
 /* ═══════════════════════════════
+   FILTER BAR
+   ═══════════════════════════════ */
+.filter-bar-section {
+  background: #f5f5f5;
+  padding: 24px 0 8px;
+  position: sticky;
+  top: 72px;
+  z-index: 100;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Search input wrapper */
+.filter-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 220px;
+  max-width: 360px;
+}
+
+.filter-search-icon {
+  position: absolute;
+  left: 14px;
+  font-size: 1rem;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.filter-search-input {
+  width: 100%;
+  padding: 10px 40px 10px 40px;
+  border: 2px solid #e0e0e0;
+  border-radius: 32px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #1a1a1a;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.filter-search-input:focus {
+  border-color: var(--primary-color, #d32f2f);
+  box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.1);
+}
+
+.filter-search-input::placeholder {
+  color: #aaa;
+}
+
+/* Clear (✕) button inside search */
+.filter-clear-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #aaa;
+  font-size: 0.85rem;
+  line-height: 1;
+  padding: 4px;
+  border-radius: 50%;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.filter-clear-btn:hover {
+  color: var(--primary-color, #d32f2f);
+  background: rgba(211, 47, 47, 0.08);
+}
+
+/* Category chips */
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-chip {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 2px solid #ddd;
+  background: #fff;
+  color: #555;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  transition: border-color 0.2s ease, background 0.2s ease,
+              color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.filter-chip:hover {
+  border-color: var(--primary-color, #d32f2f);
+  color: var(--primary-color, #d32f2f);
+  transform: translateY(-1px);
+}
+
+.filter-chip.is-active {
+  background: var(--primary-color, #d32f2f);
+  border-color: var(--primary-color, #d32f2f);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+}
+
+/* No results */
+.filter-no-results {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: #888;
+  text-align: center;
+  padding: 32px 0 8px;
+  letter-spacing: 0.3px;
+}
+
+@media (max-width: 600px) {
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-search-wrap {
+    max-width: 100%;
+  }
+}
+
+
+
+/* ═══════════════════════════════
    MONTH BLOCK
    ═══════════════════════════════ */
 .month-block {

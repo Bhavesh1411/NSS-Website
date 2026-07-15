@@ -52,10 +52,10 @@ const NSS_EVENTS = [
 
   /* November 2025 */
   { date: '19 Nov 2025', title: 'Reforming the Justice System',    tag: 'Seminar'         },
-  { date: '07 Nov 2025', title: '150 Years Grand Vande Mataram Singing', tag: 'Patriotic Event' },
+  { date: '07 Nov 2025', title: '150 Years Grand Vande Mataram Singing', tag: 'Patriotic Event', photo: 'assets/Events/150 years grand vande mataram.jpeg' },
 
   /* October 2025 */
-  { date: '30 Oct 2025', title: 'Pledge on National Unity Day',    tag: 'Patriotic Event' },
+  { date: '30 Oct 2025', title: 'Pledge on National Unity Day',    tag: 'Patriotic Event', photo: 'assets/Events/Unity Day.jpeg' },
   { date: '17 Oct 2025', title: 'Prarambh Sports Day',             tag: 'Sports'          },
   { date: '03 Oct 2025', title: 'Tree Plantation Drive',           tag: 'Environment'     },
 
@@ -64,9 +64,9 @@ const NSS_EVENTS = [
   { date: '27 Sep 2025', title: 'Rally on Swachha Bharat',         tag: 'Rally'           },
   { date: '26 Sep 2025', title: 'Smart India Hackathon',           tag: 'Hackathon'       },
   { date: '25 Sep 2025', title: 'Oath Ceremony',                   tag: 'Ceremony'        },
-  { date: '24 Sep 2025', title: 'NSS Day',                         tag: 'Celebration'     },
+  { date: '24 Sep 2025', title: 'NSS Day',                         tag: 'Celebration',     photo: 'assets/Events/NSS Day.jpeg' },
   { date: '21 Sep 2025', title: 'Rally on Women Empowerment',      tag: 'Rally'           },
-  { date: '20 Sep 2025', title: 'Beach Cleaning Drive',            tag: 'Environment'     },
+  { date: '20 Sep 2025', title: 'Beach Cleaning Drive',            tag: 'Environment',     photo: 'assets/Events/BEach cleaning drive.jpeg' },
   { date: '20 Sep 2025', title: 'Rally on Women Empowerment',      tag: 'Rally'           },
   { date: '16 Sep 2025', title: 'FE Orientation',                  tag: 'Orientation'     },
   { date: '14 Sep 2025', title: 'Rally on Peace and Anti-Violence',tag: 'Rally'           },
@@ -74,9 +74,9 @@ const NSS_EVENTS = [
   { date: '05 Sep 2025', title: 'Teachers Day',                    tag: 'Celebration'     },
 
   /* August 2025 */
-  { date: '02 Sep 2025', title: 'Ganpati Visarjan 7 Day',          tag: 'Cultural Event'  },
+  { date: '02 Sep 2025', title: 'Ganpati Visarjan 7 Day',          tag: 'Cultural Event',  photo: 'assets/Events/Ganpati Visarjan day 7.jpeg' },
   { date: '31 Aug 2025', title: 'Rally on Cancer Awareness',       tag: 'Awareness'       },
-  { date: '31 Aug 2025', title: 'Ganpati Visarjan 5 Day',          tag: 'Cultural Event'  },
+  { date: '31 Aug 2025', title: 'Ganpati Visarjan 5 Day',          tag: 'Cultural Event',  photo: 'assets/Events/Ganapati day 5.jpeg' },
   { date: '30 Aug 2025', title: 'Rally on Cancer Awareness',       tag: 'Awareness'       },
   { date: '25 Aug 2025', title: 'Seminar on Communication Skills', tag: 'Seminar'         },
   { date: '24 Aug 2025', title: 'Rally on Drugs and Anti-Alcohol', tag: 'Rally'           },
@@ -132,7 +132,7 @@ function buildCardHTML(ev) {
       class="card-view-btn"
       aria-label="View photo for ${ev.title}"
       title="View Photo"
-      data-img="https://placehold.co/800x600"
+      data-img="${ev.photo ? ev.photo : 'https://placehold.co/800x600'}"
     >&#128247;</button>`;
 }
 
@@ -184,6 +184,101 @@ document.addEventListener('DOMContentLoaded', () => {
       monthIndex++;
     });
     container.innerHTML = html;
+  }
+
+  /* ── 1b. Build filter chips from unique tags ── */
+  const chipsContainer = document.getElementById('filter-chips');
+  const searchInput    = document.getElementById('event-search');
+  const clearBtn       = document.getElementById('filter-clear');
+  const noResults      = document.getElementById('filter-no-results');
+
+  if (chipsContainer) {
+    // Collect all unique tags
+    const uniqueTags = [...new Set(NSS_EVENTS.map(ev => ev.tag))].sort();
+    uniqueTags.forEach(tag => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-chip';
+      btn.dataset.tag = tag.toLowerCase();
+      btn.textContent = tag;
+      chipsContainer.appendChild(btn);
+    });
+  }
+
+  /* ── 1c. Filter function ── */
+  function applyFilters() {
+    const activeChip = chipsContainer
+      ? chipsContainer.querySelector('.filter-chip.is-active')
+      : null;
+    const activeTag  = activeChip ? activeChip.dataset.tag : 'all';
+    const query      = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
+    // Show/hide clear button
+    if (clearBtn) clearBtn.hidden = query.length === 0;
+
+    let totalVisible = 0;
+
+    GROUPED.forEach((events, monthLabel) => {
+      const monthIndex = Array.from(GROUPED.keys()).indexOf(monthLabel);
+      const blockEl    = document.querySelector(`.month-block[data-month="${monthIndex}"]`);
+      if (!blockEl) return;
+
+      // Filter events within this month
+      const matchingEvents = events.filter(ev => {
+        const tagMatch   = activeTag === 'all' || ev.tag.toLowerCase() === activeTag;
+        const queryMatch = !query ||
+          ev.title.toLowerCase().includes(query) ||
+          ev.tag.toLowerCase().includes(query)   ||
+          ev.date.toLowerCase().includes(query);
+        return tagMatch && queryMatch;
+      });
+
+      if (matchingEvents.length === 0) {
+        blockEl.hidden = true;
+      } else {
+        blockEl.hidden = false;
+        totalVisible += matchingEvents.length;
+
+        // Show/dim individual nodes
+        const nodes = blockEl.querySelectorAll('.strip-node');
+        nodes.forEach((node, i) => {
+          const ev = events[i];
+          if (!ev) return;
+          const tagMatch   = activeTag === 'all' || ev.tag.toLowerCase() === activeTag;
+          const queryMatch = !query ||
+            ev.title.toLowerCase().includes(query) ||
+            ev.tag.toLowerCase().includes(query)   ||
+            ev.date.toLowerCase().includes(query);
+          node.style.opacity = (tagMatch && queryMatch) ? '1' : '0.2';
+          node.style.pointerEvents = (tagMatch && queryMatch) ? '' : 'none';
+        });
+      }
+    });
+
+    // Show no-results message
+    if (noResults) noResults.hidden = totalVisible > 0;
+  }
+
+  /* ── 1d. Chip click handler ── */
+  if (chipsContainer) {
+    chipsContainer.addEventListener('click', e => {
+      const chip = e.target.closest('.filter-chip');
+      if (!chip) return;
+      chipsContainer.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('is-active'));
+      chip.classList.add('is-active');
+      applyFilters();
+    });
+  }
+
+  /* ── 1e. Search input handler ── */
+  if (searchInput) {
+    searchInput.addEventListener('input', applyFilters);
+  }
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      if (searchInput) { searchInput.value = ''; searchInput.focus(); }
+      applyFilters();
+    });
   }
 
   /* ── 2. Node click handler (event delegation) ── */
