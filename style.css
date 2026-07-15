@@ -293,8 +293,9 @@ nav {
 
 .who-we-are-text {
   font-family: 'Poppins', sans-serif;
-  font-size: 15px; /* Elegant, modern size as requested */
-  line-height: 1.75;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.8;
   color: #555; /* Refined charcoal for less "heavy" feel */
   max-width: 720px; /* Optimized line length for readability */
   margin-bottom: 24px; /* Distinct paragraph spacing */
@@ -337,8 +338,9 @@ nav {
 
 .objectives-text {
   font-family: 'Poppins', sans-serif;
-  font-size: 15px;
-  line-height: 1.75;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.8;
   color: #555;
   max-width: 800px;
   margin: 0 auto 32px; /* Centered alignment for subtitle */
