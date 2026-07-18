@@ -64,15 +64,21 @@ document.addEventListener('DOMContentLoaded', () => {
             modalThought.innerText = thought;
 
             // Activate modal
+            modal.classList.remove('closing');
             modal.classList.add('active');
             document.body.style.overflow = 'hidden'; // Stop scrolling
         });
     });
 
-    // Close Modal
+    // Close Modal with smooth transition
     function closeModal() {
-        modal.classList.remove('active');
-        document.body.style.overflow = 'auto'; // Enable scrolling
+        modal.classList.add('closing');
+        // Wait for the CSS transition (250ms) to complete before removing the active class
+        setTimeout(() => {
+            modal.classList.remove('active');
+            modal.classList.remove('closing');
+            document.body.style.overflow = ''; // Enable scrolling
+        }, 250);
     }
 
     closeBtn.addEventListener('click', closeModal);
