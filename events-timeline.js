@@ -384,4 +384,83 @@ document.addEventListener('DOMContentLoaded', () => {
     e.stopPropagation();
     openLightbox(btn.dataset.img || 'https://placehold.co/800x600');
   });
+
+  /* ── 5. All Events Table Summary Section ── */
+  const tableBody = document.getElementById('events-table-body');
+  const toggleBtn = document.getElementById('toggle-events-btn');
+  let tableExpanded = false;
+
+  if (tableBody) {
+    // Sort all NSS events by actual date in descending chronological order
+    const sortedEvents = [...NSS_EVENTS].sort((a, b) => {
+      return new Date(b.date) - new Date(a.date);
+    });
+
+    // Populate the table
+    sortedEvents.forEach((ev, index) => {
+      const tr = document.createElement('tr');
+      // Hide rows after index 4 (show only latest 5 initially)
+      if (index >= 5) {
+        tr.style.display = 'none';
+        tr.classList.add('collapsible-row');
+      }
+      
+      const srNo = index + 1;
+      const isClickable = ev.photo ? 'has-photo' : '';
+      const photoAttr = ev.photo ? `data-img="${ev.photo}"` : '';
+      const iconMarkup = ev.photo ? '<span class="photo-indicator" aria-hidden="true">📷</span>' : '';
+      
+      tr.innerHTML = `
+        <td>${srNo}</td>
+        <td>
+          <button class="table-event-link ${isClickable}" ${photoAttr} aria-label="${ev.title}">
+            ${ev.title} ${iconMarkup}
+          </button>
+        </td>
+        <td>${ev.date}</td>
+        <td><span class="table-cat-badge">${ev.tag}</span></td>
+      `;
+      tableBody.appendChild(tr);
+    });
+
+    // Handle view all / show less click behavior
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        const collapsibleRows = tableBody.querySelectorAll('.collapsible-row');
+        tableExpanded = !tableExpanded;
+        
+        if (tableExpanded) {
+          collapsibleRows.forEach(row => {
+            row.style.display = '';
+            row.style.opacity = '0';
+            row.style.transition = 'opacity 0.3s ease';
+            requestAnimationFrame(() => {
+              row.style.opacity = '1';
+            });
+          });
+          toggleBtn.textContent = 'SHOW LESS';
+        } else {
+          collapsibleRows.forEach(row => {
+            row.style.display = 'none';
+          });
+          toggleBtn.textContent = 'VIEW COMPLETE LIST';
+          
+          // Smoothly scroll back to the beginning of the All Events section
+          const targetSection = document.getElementById('all-events-section');
+          if (targetSection) {
+            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+    }
+
+    // Delegate table name triggers to open the media lightbox
+    tableBody.addEventListener('click', (e) => {
+      const btn = e.target.closest('.table-event-link.has-photo');
+      if (!btn) return;
+      e.stopPropagation();
+      openLightbox(btn.dataset.img);
+    });
+  }
 });
+
