@@ -309,40 +309,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- Team Branding (Separate Page) ---
-  const marqueeWrapper = document.querySelector('.council-marquee-wrapper');
-  const marqueeGrid = document.querySelector('.council-grid');
-
-  if (marqueeWrapper && marqueeGrid) {
-    // Clone cards for infinite loop
-    const cards = Array.from(marqueeGrid.children);
-    cards.forEach(card => {
-      const clone = card.cloneNode(true);
-      marqueeGrid.appendChild(clone);
-    });
-
-    // Marquee Timeline
-    //by adarsh
-    const marqueeTl = gsap.to(marqueeGrid, {
-      xPercent: -50,
-      duration: 25,
-      ease: "none",
-      repeat: -1
-    });
-
-    marqueeWrapper.addEventListener('mouseenter', () => marqueeTl.pause());
-    marqueeWrapper.addEventListener('mouseleave', () => marqueeTl.play());
-    //by adarsh
-    
-    // Entrance for standalone page elements
-    gsap.to('.team-title .letter', {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      stagger: 0.15,
-      ease: 'power3.out'
-    });
-
+  // --- Upgraded Horizontal Council & Slideshow ---
+  const councilUpgradedSec = document.getElementById('council-upgraded-section');
+  if (councilUpgradedSec) {
+    // 1. Animate all team cards on load
     gsap.to('.team-card', {
       opacity: 1,
       scale: 1,
@@ -351,6 +321,38 @@ document.addEventListener('DOMContentLoaded', () => {
       stagger: 0.05,
       ease: 'back.out(1.7)'
     });
+
+    // 2. Continuous Marquee Slideshow
+    const track = document.getElementById('council-marquee-track');
+    const container = document.getElementById('council-marquee-container');
+
+    if (track && container) {
+      // Clone cards for infinite loop
+      const cards = Array.from(track.children);
+      cards.forEach(card => {
+        const clone = card.cloneNode(true);
+        track.appendChild(clone);
+      });
+
+      // Continuous loop animation using GSAP
+      const marqueeTl = gsap.to(track, {
+        x: () => {
+          const totalWidth = track.scrollWidth;
+          return -totalWidth / 2;
+        },
+        duration: 35, // speed in seconds
+        ease: "none",
+        repeat: -1
+      });
+
+      // Pause on hover
+      container.addEventListener('mouseenter', () => marqueeTl.pause());
+      container.addEventListener('mouseleave', () => marqueeTl.play());
+
+      // Support mobile touch to pause/play
+      container.addEventListener('touchstart', () => marqueeTl.pause());
+      container.addEventListener('touchend', () => marqueeTl.play());
+    }
   }
 
   // Section Header Divider Reveal
