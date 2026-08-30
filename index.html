@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="preloader.css">
   <link rel="stylesheet" href="intro.css">
   <link rel="stylesheet" href="magazine.css">
+  <link rel="stylesheet" href="events-calendar.css">
 
   <!-- Lottie Player for Animated Illustrations -->
   <script src="https://unpkg.com/@lottiefiles/lottie-player@2.0.8/dist/lottie-player.js"></script>
@@ -205,80 +206,92 @@
           <h2 class="events-title">Our Events</h2>
         </div>
 
-        <div class="events-grid">
-          <!-- Card 1 -->
-          <div class="event-card">
-            <div class="card-img-container">
-              <img src="assets/Our Events/independence day.png" alt="Independence Day">
-              <div class="card-slide-overlay">
-                <h3 class="card-title-hover">Independence Day</h3>
+        <!-- Academic Year Tab Switchers -->
+        <div class="events-tabs-container">
+          <div class="events-tabs">
+            <button class="events-tab-btn active" data-tab="tab-2026-27" aria-label="Show 2026-27 Events">2026-27</button>
+            <button class="events-tab-btn" data-tab="tab-2025-26" aria-label="Show 2025-26 Archive">2025-26 Archive</button>
+          </div>
+        </div>
+
+        <!-- Tab Pane 1: Academic Year 2026-27 (Active Cards) -->
+        <div id="tab-2026-27" class="events-tab-pane active">
+          <div class="events-grid">
+            <!-- Card 1: Yoga Day 2026 -->
+            <div class="event-card">
+              <div class="card-img-container">
+                <img src="assets/Our Events/international yoga day.png" alt="International Yoga Day 2026">
+                <div class="card-slide-overlay">
+                  <h3 class="card-title-hover">International Yoga Day 2026</h3>
+                </div>
               </div>
             </div>
-          </div>
-          <!-- Card 2 -->
-          <div class="event-card">
-            <div class="card-img-container">
-              <img src="assets/Our Events/NSS day.png" alt="NSS Day">
-              <div class="card-slide-overlay">
-                <h3 class="card-title-hover">NSS Day</h3>
+
+            <!-- Card 2: Tree Plantation Drive 2026 -->
+            <div class="event-card">
+              <div class="card-img-container">
+                <img src="assets/photos/hero_3.png" alt="Tree Plantation Drive">
+                <div class="card-slide-overlay">
+                  <h3 class="card-title-hover">Tree Plantation Drive</h3>
+                </div>
               </div>
             </div>
-          </div>
-          <!-- Card 3 -->
-          <div class="event-card">
-            <div class="card-img-container">
-              <img src="assets/Our Events/beach cleaning.png" alt="Beach Cleaning Drive">
-              <div class="card-slide-overlay">
-                <h3 class="card-title-hover">Beach Cleaning Drive</h3>
+
+            <!-- Card 3: Independence Day 2026 -->
+            <div class="event-card">
+              <div class="card-img-container">
+                <img src="assets/Our Events/independence day.png" alt="Independence Day 2026">
+                <div class="card-slide-overlay">
+                  <h3 class="card-title-hover">Independence Day 2026</h3>
+                </div>
               </div>
             </div>
-          </div>
-          <!-- Card 4 -->
-          <div class="event-card">
-            <div class="card-img-container">
-              <img src="assets/Our Events/ganapati visarjan.png" alt="Ganapati Visarjan">
+
+            <!-- Card 4: Upcoming Placeholder -->
+            <div class="event-card upcoming-placeholder-card">
               <div class="card-slide-overlay">
-                <h3 class="card-title-hover">Ganapati Visarjan</h3>
-              </div>
-            </div>
-          </div>
-          <!-- Card 5 -->
-          <div class="event-card">
-            <div class="card-img-container">
-              <img src="assets/Our Events/ekta diwas.png" alt="Ekta Diwas">
-              <div class="card-slide-overlay">
-                <h3 class="card-title-hover">Ekta Diwas</h3>
-              </div>
-            </div>
-          </div>
-          <!-- Card 6 -->
-          <div class="event-card">
-            <div class="card-img-container">
-              <img src="assets/Our Events/international yoga day.png" alt="International Yoga Day">
-              <div class="card-slide-overlay">
-                <h3 class="card-title-hover">International Yoga Day</h3>
-              </div>
-            </div>
-          </div>
-          <!-- Card 7 -->
-          <div class="event-card">
-            <div class="card-img-container">
-              <img src="https://placehold.co/600x800" alt="Hackspark">
-              <div class="card-slide-overlay">
-                <h3 class="card-title-hover">Hackspark</h3>
-              </div>
-            </div>
-          </div>
-          <!-- Card 8 -->
-          <div class="event-card">
-            <div class="card-img-container">
-              <img src="assets/Our Events/Awareness rallies.png" alt="Awareness Rallies">
-              <div class="card-slide-overlay">
-                <h3 class="card-title-hover">Awareness Rallies</h3>
+                <div>
+                  <span class="placeholder-icon" aria-hidden="true">🎯</span>
+                  <p class="placeholder-text">New events will be added here as they occur.</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Tab Pane 2: Academic Year 2025-26 (Interactive Calendar View) -->
+        <div id="tab-2025-26" class="events-tab-pane">
+          <div class="calendar-widget">
+            <!-- Left Panel: Grid Calendar -->
+            <div class="calendar-grid-side" role="region" aria-label="Academic Year 2025-26 Monthly Calendar">
+              <div class="calendar-nav-header">
+                <button class="calendar-arrow-btn" id="cal-prev-month" aria-label="Previous Month">&larr;</button>
+                <span class="calendar-month-label" id="cal-month-label">February <span>2026</span></span>
+                <button class="calendar-arrow-btn" id="cal-next-month" aria-label="Next Month">&rarr;</button>
+              </div>
+
+              <div class="calendar-weekdays">
+                <div class="weekday">Su</div>
+                <div class="weekday">Mo</div>
+                <div class="weekday">Tu</div>
+                <div class="weekday">We</div>
+                <div class="weekday">Th</div>
+                <div class="weekday">Fr</div>
+                <div class="weekday">Sa</div>
+              </div>
+
+              <div class="calendar-days-grid" id="cal-days-grid" role="grid">
+                <!-- Javascript dynamically populates cells -->
+              </div>
+            </div>
+
+            <!-- Right Panel: Day Detail Preview -->
+            <div class="calendar-detail-side" id="cal-detail-side" aria-live="polite">
+              <!-- Javascript dynamically populates details -->
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <!-- Subtle Lottie: Waving flag illustration (bottom-right) -->
@@ -294,8 +307,8 @@
     </section>
 
 
-    <!-- NSS Magazine Section -->
-    <section id="magazine" class="magazine-section section-padding">
+    <!-- NSS Magazine Section (Hidden as requested, do not delete) -->
+    <section id="magazine" class="magazine-section section-padding" style="display: none;">
       <div class="container">
         <div class="magazine-header">
           <h2 class="magazine-title">NSS Magazine</h2>
@@ -403,5 +416,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
   <script src="script.js"></script>
   <script src="magazine.js"></script>
+  <script src="events-calendar.js"></script>
 </body>
 </html>

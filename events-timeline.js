@@ -24,7 +24,7 @@ function getCategoryIcon(tag) {
   return CATEGORY_ICON[tag.toLowerCase()] || '📌';
 }
 
-/* ─── All NSS Events Data ─── */
+/* ─── All NSS Events Data (2025-26) ─── */
 const NSS_EVENTS = [
   /* February 2026 */
   { date: '21 Feb 2026', title: "Day 2 Hackspark's 2.0",          tag: 'Hackathon'       },
@@ -100,6 +100,20 @@ const NSS_EVENTS = [
   { date: '11 Jul 2025', title: 'Health Checkup Camp',             tag: 'Health Drive'    },
 ];
 
+/* ─── All NSS Events Data (2026-27) ─── */
+const NSS_EVENTS_2026_27 = [
+  { date: '29 Aug 2026', title: 'Self Defence Workshop', tag: 'Awareness', venue: 'TSEC' },
+  { date: '25 Aug 2026', title: 'SGNP Kanheri Caves Visit', tag: 'Environment', venue: 'Sanjay Gandhi National Park' },
+  { date: '15 Aug 2026', title: 'Independence Day', tag: 'Patriotic Event', venue: 'TSEC' },
+  { date: '14 Aug 2026', title: 'Blood Donation', tag: 'Health Drive', venue: 'TSEC' },
+  { date: '12 Aug 2026', title: 'Tree Plantation Drive', tag: 'Environment', venue: 'Borivali West' },
+  { date: '08 Aug 2026', title: 'SGNP Awareness Program', tag: 'Awareness', venue: 'Sanjay Gandhi National Park' },
+  { date: '31 Jul 2026', title: 'NSS Orientation', tag: 'Orientation', venue: 'TSEC' },
+  { date: '30 Jul 2026', title: 'Nasha Mukti Awareness', tag: 'Awareness', venue: 'TSEC' },
+  { date: '24 Jul 2026', title: 'Kargil Diwas Celebration', tag: 'Patriotic Event', venue: 'TSEC' },
+  { date: '21 Jun 2026', title: 'International Yoga Day', tag: 'Health Drive', venue: 'TSEC' }
+];
+
 /* ─── Group events by "Month YYYY" ─── */
 function groupByMonth(events) {
   const monthNames = ['January','February','March','April','May','June',
@@ -115,18 +129,17 @@ function groupByMonth(events) {
   return map;
 }
 
-/* Module-level grouped Map so click handlers can access it */
-const GROUPED = groupByMonth(NSS_EVENTS);
-
 /* ─── Build card inner HTML ─── */
 function buildCardHTML(ev) {
   const icon = getCategoryIcon(ev.tag);
+  const venueHTML = ev.venue ? `<p class="card-venue" style="font-size: 0.75rem; color: #555; margin-top: 4px;">📍 ${ev.venue}</p>` : '';
   return `
     <div class="card-icon">${icon}</div>
     <div class="card-body">
       <span class="card-date-badge">${ev.date}</span>
       <h4 class="card-title">${ev.title}</h4>
       <p class="card-tag">${ev.tag}</p>
+      ${venueHTML}
     </div>
     <button
       class="card-view-btn"
@@ -171,30 +184,30 @@ function buildMonthBlock(monthLabel, events, monthIndex) {
     </div>`;
 }
 
-/* ─── Main DOMContentLoaded ─── */
-document.addEventListener('DOMContentLoaded', () => {
+/* Global variable to hold current dataset for event delegation */
+let CURRENT_GROUPED = new Map();
 
+/* ─── Main Rendering Function ─── */
+function renderAcademicYear(eventsArray) {
+  CURRENT_GROUPED = groupByMonth(eventsArray);
+  
   /* ── 1. Inject month blocks into the timeline section ── */
   const container = document.querySelector('#timeline .container');
   if (container) {
     let html = '';
     let monthIndex = 0;
-    GROUPED.forEach((events, monthLabel) => {
+    CURRENT_GROUPED.forEach((events, monthLabel) => {
       html += buildMonthBlock(monthLabel, events, monthIndex);
       monthIndex++;
     });
     container.innerHTML = html;
   }
 
-  /* ── 1b. Build filter chips from unique tags ── */
+  /* ── 2. Build filter chips from unique tags ── */
   const chipsContainer = document.getElementById('filter-chips');
-  const searchInput    = document.getElementById('event-search');
-  const clearBtn       = document.getElementById('filter-clear');
-  const noResults      = document.getElementById('filter-no-results');
-
   if (chipsContainer) {
-    // Collect all unique tags
-    const uniqueTags = [...new Set(NSS_EVENTS.map(ev => ev.tag))].sort();
+    chipsContainer.innerHTML = '<button class="filter-chip is-active" data-tag="all" id="chip-all">All</button>';
+    const uniqueTags = [...new Set(eventsArray.map(ev => ev.tag))].sort();
     uniqueTags.forEach(tag => {
       const btn = document.createElement('button');
       btn.className = 'filter-chip';
@@ -204,61 +217,172 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ── 1c. Filter function ── */
-  function applyFilters() {
-    const activeChip = chipsContainer
-      ? chipsContainer.querySelector('.filter-chip.is-active')
-      : null;
-    const activeTag  = activeChip ? activeChip.dataset.tag : 'all';
-    const query      = searchInput ? searchInput.value.trim().toLowerCase() : '';
+  /* Reset search */
+  const searchInput = document.getElementById('event-search');
+  if (searchInput) searchInput.value = '';
+  
+  /* ── 3. Apply Filters immediately ── */
+  applyFilters();
 
-    // Show/hide clear button
-    if (clearBtn) clearBtn.hidden = query.length === 0;
+  /* ── 4. All Events Table Summary Section ── */
+  const tableBody = document.getElementById('events-table-body');
+  const toggleBtn = document.getElementById('toggle-events-btn');
+  
+  if (tableBody) {
+    tableBody.innerHTML = ''; // clear table
+    const sortedEvents = [...eventsArray].sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    let totalVisible = 0;
+    sortedEvents.forEach((ev, index) => {
+      const tr = document.createElement('tr');
+      // Hide rows after index 4 (show only latest 5 initially)
+      if (index >= 5) {
+        tr.style.display = 'none';
+        tr.classList.add('collapsible-row');
+      }
+      
+      const srNo = index + 1;
+      const isClickable = ev.photo ? 'has-photo' : '';
+      const photoAttr = ev.photo ? `data-img="${ev.photo}"` : '';
+      const iconMarkup = ev.photo ? '<span class="photo-indicator" aria-hidden="true">📷</span>' : '';
+      const venueMarkup = ev.venue ? `<br><small style="color: #666; font-size: 0.8em;">📍 ${ev.venue}</small>` : '';
+      
+      tr.innerHTML = `
+        <td>${srNo}</td>
+        <td>
+          <button class="table-event-link ${isClickable}" ${photoAttr} aria-label="${ev.title}">
+            ${ev.title} ${iconMarkup}
+          </button>
+          ${venueMarkup}
+        </td>
+        <td>${ev.date}</td>
+        <td><span class="table-cat-badge">${ev.tag}</span></td>
+      `;
+      tableBody.appendChild(tr);
+    });
+    
+    // reset toggle button state
+    if (toggleBtn) {
+      toggleBtn.textContent = 'VIEW COMPLETE LIST';
+      // Remove any existing click handlers by cloning
+      const newToggleBtn = toggleBtn.cloneNode(true);
+      toggleBtn.parentNode.replaceChild(newToggleBtn, toggleBtn);
+      
+      let tableExpanded = false;
+      newToggleBtn.addEventListener('click', () => {
+        const collapsibleRows = tableBody.querySelectorAll('.collapsible-row');
+        tableExpanded = !tableExpanded;
+        
+        if (tableExpanded) {
+          collapsibleRows.forEach(row => {
+            row.style.display = '';
+            row.style.opacity = '0';
+            row.style.transition = 'opacity 0.3s ease';
+            requestAnimationFrame(() => {
+              row.style.opacity = '1';
+            });
+          });
+          newToggleBtn.textContent = 'SHOW LESS';
+        } else {
+          collapsibleRows.forEach(row => {
+            row.style.display = 'none';
+          });
+          newToggleBtn.textContent = 'VIEW COMPLETE LIST';
+          const targetSection = document.getElementById('all-events-section');
+          if (targetSection) {
+            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+    }
+  }
+}
 
-    GROUPED.forEach((events, monthLabel) => {
-      const monthIndex = Array.from(GROUPED.keys()).indexOf(monthLabel);
-      const blockEl    = document.querySelector(`.month-block[data-month="${monthIndex}"]`);
-      if (!blockEl) return;
+/* ─── Global Filter Function ─── */
+function applyFilters() {
+  const chipsContainer = document.getElementById('filter-chips');
+  const searchInput    = document.getElementById('event-search');
+  const clearBtn       = document.getElementById('filter-clear');
+  const noResults      = document.getElementById('filter-no-results');
 
-      // Filter events within this month
-      const matchingEvents = events.filter(ev => {
+  const activeChip = chipsContainer
+    ? chipsContainer.querySelector('.filter-chip.is-active')
+    : null;
+  const activeTag  = activeChip ? activeChip.dataset.tag : 'all';
+  const query      = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
+  if (clearBtn) clearBtn.hidden = query.length === 0;
+
+  let totalVisible = 0;
+
+  CURRENT_GROUPED.forEach((events, monthLabel) => {
+    const monthIndex = Array.from(CURRENT_GROUPED.keys()).indexOf(monthLabel);
+    const blockEl    = document.querySelector(`.month-block[data-month="${monthIndex}"]`);
+    if (!blockEl) return;
+
+    const matchingEvents = events.filter(ev => {
+      const tagMatch   = activeTag === 'all' || ev.tag.toLowerCase() === activeTag;
+      const queryMatch = !query ||
+        ev.title.toLowerCase().includes(query) ||
+        ev.tag.toLowerCase().includes(query)   ||
+        ev.date.toLowerCase().includes(query);
+      return tagMatch && queryMatch;
+    });
+
+    if (matchingEvents.length === 0) {
+      blockEl.hidden = true;
+    } else {
+      blockEl.hidden = false;
+      totalVisible += matchingEvents.length;
+
+      const nodes = blockEl.querySelectorAll('.strip-node');
+      nodes.forEach((node, i) => {
+        const ev = events[i];
+        if (!ev) return;
         const tagMatch   = activeTag === 'all' || ev.tag.toLowerCase() === activeTag;
         const queryMatch = !query ||
           ev.title.toLowerCase().includes(query) ||
           ev.tag.toLowerCase().includes(query)   ||
           ev.date.toLowerCase().includes(query);
-        return tagMatch && queryMatch;
+        node.style.opacity = (tagMatch && queryMatch) ? '1' : '0.2';
+        node.style.pointerEvents = (tagMatch && queryMatch) ? '' : 'none';
       });
+    }
+  });
 
-      if (matchingEvents.length === 0) {
-        blockEl.hidden = true;
-      } else {
-        blockEl.hidden = false;
-        totalVisible += matchingEvents.length;
+  if (noResults) noResults.hidden = totalVisible > 0;
+}
 
-        // Show/dim individual nodes
-        const nodes = blockEl.querySelectorAll('.strip-node');
-        nodes.forEach((node, i) => {
-          const ev = events[i];
-          if (!ev) return;
-          const tagMatch   = activeTag === 'all' || ev.tag.toLowerCase() === activeTag;
-          const queryMatch = !query ||
-            ev.title.toLowerCase().includes(query) ||
-            ev.tag.toLowerCase().includes(query)   ||
-            ev.date.toLowerCase().includes(query);
-          node.style.opacity = (tagMatch && queryMatch) ? '1' : '0.2';
-          node.style.pointerEvents = (tagMatch && queryMatch) ? '' : 'none';
-        });
+/* ─── Main DOMContentLoaded ─── */
+document.addEventListener('DOMContentLoaded', () => {
+
+  /* ── 0. Initial Render ── */
+  renderAcademicYear(NSS_EVENTS);
+
+  /* ── 1. Academic Year Tab Switching ── */
+  const yearTabs = document.querySelectorAll('.year-tab');
+  
+  yearTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Avoid re-rendering if already active
+      if(tab.classList.contains('is-active')) return;
+      
+      yearTabs.forEach(t => t.classList.remove('is-active'));
+      tab.classList.add('is-active');
+
+      const year = tab.dataset.year;
+      if (year === '2025-26') {
+        renderAcademicYear(NSS_EVENTS);
+      } else if (year === '2026-27') {
+        renderAcademicYear(NSS_EVENTS_2026_27);
       }
     });
+  });
 
-    // Show no-results message
-    if (noResults) noResults.hidden = totalVisible > 0;
-  }
+  /* ── 2. Filter Event Listeners ── */
+  const chipsContainer = document.getElementById('filter-chips');
+  const searchInput    = document.getElementById('event-search');
+  const clearBtn       = document.getElementById('filter-clear');
 
-  /* ── 1d. Chip click handler ── */
   if (chipsContainer) {
     chipsContainer.addEventListener('click', e => {
       const chip = e.target.closest('.filter-chip');
@@ -269,7 +393,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ── 1e. Search input handler ── */
   if (searchInput) {
     searchInput.addEventListener('input', applyFilters);
   }
@@ -281,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ── 2. Node click handler (event delegation) ── */
+  /* ── 3. Node click handler (event delegation) ── */
   document.addEventListener('click', (e) => {
     const node = e.target.closest('.strip-node');
     if (!node) return;
@@ -291,62 +414,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const monthBlock = document.querySelector(`.month-block[data-month="${monthIndex}"]`);
     if (!monthBlock) return;
 
-    /* Deactivate all nodes in this month */
     monthBlock.querySelectorAll('.strip-node').forEach(n => {
       n.classList.remove('is-active');
       n.setAttribute('aria-pressed', 'false');
     });
 
-    /* Activate clicked node */
     node.classList.add('is-active');
     node.setAttribute('aria-pressed', 'true');
 
-    /* Retrieve event from GROUPED map */
-    const monthKeys = Array.from(GROUPED.keys());
+    const monthKeys = Array.from(CURRENT_GROUPED.keys());
     const monthLabel = monthKeys[monthIndex];
-    const events = GROUPED.get(monthLabel);
+    const events = CURRENT_GROUPED.get(monthLabel);
     if (!events) return;
     const ev = events[eventIndex];
     if (!ev) return;
 
-    /* Animate card swap */
     const cardEl = document.getElementById(`card-m${monthIndex}`);
     if (cardEl) {
       cardEl.classList.remove('is-visible');
       setTimeout(() => {
         cardEl.innerHTML = buildCardHTML(ev);
-        // Double rAF ensures transition fires after paint
         requestAnimationFrame(() => requestAnimationFrame(() => {
           cardEl.classList.add('is-visible');
         }));
       }, 220);
     }
   });
-
-  /* ── 3. Hero text entrance animation ── */
-  const heroTitle = document.querySelector('.timeline-hero-title');
-  const heroSub   = document.querySelector('.timeline-hero-subtitle');
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  if (reducedMotion) {
-    if (heroTitle) { heroTitle.style.opacity = '1'; heroTitle.style.transform = 'none'; }
-    if (heroSub)   { heroSub.style.opacity   = '1'; heroSub.style.transform   = 'none'; }
-  } else {
-    setTimeout(() => {
-      if (heroTitle) {
-        heroTitle.style.transition = 'opacity 0.9s ease, transform 0.9s ease';
-        heroTitle.style.opacity    = '1';
-        heroTitle.style.transform  = 'translateY(0)';
-      }
-      setTimeout(() => {
-        if (heroSub) {
-          heroSub.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-          heroSub.style.opacity    = '1';
-          heroSub.style.transform  = 'translateY(0)';
-        }
-      }, 400);
-    }, 300);
-  }
 
   /* ── 4. Lightbox ── */
   const lightbox      = document.getElementById('lightbox');
@@ -377,7 +470,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape' && lightbox && lightbox.classList.contains('active')) closeLightbox();
   });
 
-  /* Delegate camera-button clicks to open lightbox */
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.card-view-btn');
     if (!btn) return;
@@ -385,76 +477,34 @@ document.addEventListener('DOMContentLoaded', () => {
     openLightbox(btn.dataset.img || 'https://placehold.co/800x600');
   });
 
-  /* ── 5. All Events Table Summary Section ── */
-  const tableBody = document.getElementById('events-table-body');
-  const toggleBtn = document.getElementById('toggle-events-btn');
-  let tableExpanded = false;
+  /* ── 5. Hero text entrance animation ── */
+  const heroTitle = document.querySelector('.timeline-hero-title');
+  const heroSub   = document.querySelector('.timeline-hero-subtitle');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (tableBody) {
-    // Sort all NSS events by actual date in descending chronological order
-    const sortedEvents = [...NSS_EVENTS].sort((a, b) => {
-      return new Date(b.date) - new Date(a.date);
-    });
-
-    // Populate the table
-    sortedEvents.forEach((ev, index) => {
-      const tr = document.createElement('tr');
-      // Hide rows after index 4 (show only latest 5 initially)
-      if (index >= 5) {
-        tr.style.display = 'none';
-        tr.classList.add('collapsible-row');
+  if (reducedMotion) {
+    if (heroTitle) { heroTitle.style.opacity = '1'; heroTitle.style.transform = 'none'; }
+    if (heroSub)   { heroSub.style.opacity   = '1'; heroSub.style.transform   = 'none'; }
+  } else {
+    setTimeout(() => {
+      if (heroTitle) {
+        heroTitle.style.transition = 'opacity 0.9s ease, transform 0.9s ease';
+        heroTitle.style.opacity    = '1';
+        heroTitle.style.transform  = 'translateY(0)';
       }
-      
-      const srNo = index + 1;
-      const isClickable = ev.photo ? 'has-photo' : '';
-      const photoAttr = ev.photo ? `data-img="${ev.photo}"` : '';
-      const iconMarkup = ev.photo ? '<span class="photo-indicator" aria-hidden="true">📷</span>' : '';
-      
-      tr.innerHTML = `
-        <td>${srNo}</td>
-        <td>
-          <button class="table-event-link ${isClickable}" ${photoAttr} aria-label="${ev.title}">
-            ${ev.title} ${iconMarkup}
-          </button>
-        </td>
-        <td>${ev.date}</td>
-        <td><span class="table-cat-badge">${ev.tag}</span></td>
-      `;
-      tableBody.appendChild(tr);
-    });
-
-    // Handle view all / show less click behavior
-    if (toggleBtn) {
-      toggleBtn.addEventListener('click', () => {
-        const collapsibleRows = tableBody.querySelectorAll('.collapsible-row');
-        tableExpanded = !tableExpanded;
-        
-        if (tableExpanded) {
-          collapsibleRows.forEach(row => {
-            row.style.display = '';
-            row.style.opacity = '0';
-            row.style.transition = 'opacity 0.3s ease';
-            requestAnimationFrame(() => {
-              row.style.opacity = '1';
-            });
-          });
-          toggleBtn.textContent = 'SHOW LESS';
-        } else {
-          collapsibleRows.forEach(row => {
-            row.style.display = 'none';
-          });
-          toggleBtn.textContent = 'VIEW COMPLETE LIST';
-          
-          // Smoothly scroll back to the beginning of the All Events section
-          const targetSection = document.getElementById('all-events-section');
-          if (targetSection) {
-            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
+      setTimeout(() => {
+        if (heroSub) {
+          heroSub.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+          heroSub.style.opacity    = '1';
+          heroSub.style.transform  = 'translateY(0)';
         }
-      });
-    }
-
-    // Delegate table name triggers to open the media lightbox
+      }, 400);
+    }, 300);
+  }
+  
+  /* Delegate table name triggers to open the media lightbox */
+  const tableBody = document.getElementById('events-table-body');
+  if(tableBody) {
     tableBody.addEventListener('click', (e) => {
       const btn = e.target.closest('.table-event-link.has-photo');
       if (!btn) return;
@@ -463,4 +513,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-
