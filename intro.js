@@ -104,8 +104,8 @@
 
     await wait(350); // Fade-in transition completes
 
-    /* Type Line 1: "NSS TSEC UNIT" */
-    await typeText(line1El, 'NSS TSEC UNIT', 72);
+    /* Type Line 1: "TSEC NSS UNIT" */
+    await typeText(line1El, 'TSEC NSS UNIT', 72);
 
     await wait(320);
 
