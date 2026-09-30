@@ -85,6 +85,7 @@ const NSS_EVENTS_2026_27 = [
   /* September 2026 */
   { date: '27 Sep 2026', title: 'Beach Cleaning Gorai',                    tag: 'Environment',     venue: 'Gorai',                      photo: 'assets/Events/beach-cleaning.jpeg' },
   { date: '25 Sep 2026', title: 'Helping Traffic Management in Visarjan',  tag: 'Social Service',  venue: 'Mumbai',                     photo: 'assets/Events/traffic management ganpati vishrajan.jpg' },
+  { date: '24 Sep 2026', title: 'Karuna',                                  tag: 'Celebration',     venue: 'TSEC',                       photo: 'assets/Events/Karuna 2026.jpg' },
   { date: '18 Sep 2026', title: 'Ganpati Visarjan',                        tag: 'Cultural Event',  venue: 'Mumbai',                     photo: 'assets/Events/ganpati vishrajan.jpg' },
   { date: '15 Sep 2026', title: 'Ganpati Visarjan',                        tag: 'Cultural Event',  venue: 'Mumbai',                     photo: 'assets/Events/ganpati vishrajan.jpg' },
 
