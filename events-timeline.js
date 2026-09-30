@@ -93,7 +93,6 @@ const NSS_EVENTS_2026_27 = [
   { date: '25 Aug 2026', title: 'SGNP Kanheri Caves Visit',                tag: 'Environment',     venue: 'Sanjay Gandhi National Park', photo: 'assets/Events/kanheri caves.jpg' },
   { date: '15 Aug 2026', title: 'Independence Day',                        tag: 'Patriotic Event', venue: 'TSEC',                       photo: 'assets/Events/independence day.jpg' },
   { date: '14 Aug 2026', title: 'Health Checkup Camp',                     tag: 'Health Drive',    venue: 'TSEC',                       photo: 'assets/Events/health-checkup.jpg' },
-  { date: '14 Aug 2026', title: 'Blood Donation',                          tag: 'Health Drive',    venue: 'TSEC' },
   { date: '12 Aug 2026', title: 'Tree Plantation Drive',                   tag: 'Environment',     venue: 'Borivali West',              photo: 'assets/Events/tree plantation.jpg' },
   { date: '08 Aug 2026', title: 'SGNP Awareness Program',                  tag: 'Awareness',       venue: 'Sanjay Gandhi National Park', photo: 'assets/Events/sgnp awareness.jpg' },
 
