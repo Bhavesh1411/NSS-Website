@@ -99,7 +99,7 @@ const NSS_EVENTS_2026_27 = [
   /* July 2026 */
   { date: '31 Jul 2026', title: 'NSS Orientation',                         tag: 'Orientation',     venue: 'TSEC',                       photo: 'assets/Events/nss-orientation.jpg' },
   { date: '30 Jul 2026', title: 'Nasha Mukti Awareness',                   tag: 'Awareness',       venue: 'TSEC',                       photo: 'assets/Events/nasha-mukti.jpg' },
-  { date: '24 Jul 2026', title: 'Kargil Diwas Celebration',                tag: 'Patriotic Event', venue: 'TSEC' },
+  { date: '24 Jul 2026', title: 'Kargil Diwas Celebration',                tag: 'Patriotic Event', venue: 'TSEC',                       photo: 'assets/Events/Kargil Diwas.jpg' },
 
   /* June 2026 */
   { date: '21 Jun 2026', title: 'International Yoga Day',                  tag: 'Health Drive',    venue: 'TSEC',                       photo: 'assets/Events/international-yoga day.jpg' }
