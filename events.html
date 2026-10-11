@@ -55,81 +55,32 @@
         <div class="divider" style="margin: 24px auto 0;"></div>
       </div>
     </section>
-    <!-- Academic Year Selector -->
-    <section class="academic-year-selector section-padding" style="padding-bottom: 0; padding-top: 32px;">
-      <div class="container">
-        <div class="year-tabs-container">
-          <button class="year-tab is-active" data-year="2025-26">
-            <span class="year-icon" aria-hidden="true">📅</span> Academic Year 2025–26
-          </button>
-          <button class="year-tab" data-year="2026-27">
-            <span class="year-icon" aria-hidden="true">📅</span> Academic Year 2026–27
-          </button>
-        </div>
-      </div>
+    <!-- Academic year is fixed to 2026–27; only the card-grid layout is shown. -->
+    <section class="academic-year-label" aria-label="Academic year">
+      <div class="container"><span>Academic Year 2026–27</span></div>
     </section>
-    
-    <!-- Filter Bar -->
+
+    <!-- Search and category filters for the event card grid -->
     <section class="filter-bar-section" id="filter-bar">
       <div class="container">
         <div class="filter-bar">
-          <!-- Search Input -->
           <div class="filter-search-wrap">
             <span class="filter-search-icon" aria-hidden="true">🔍</span>
-            <input
-              type="search"
-              id="event-search"
-              class="filter-search-input"
-              placeholder="Search events…"
-              aria-label="Search events"
-              autocomplete="off"
-            />
+            <input type="search" id="event-search" class="filter-search-input" placeholder="Search events…" aria-label="Search events" autocomplete="off" />
             <button class="filter-clear-btn" id="filter-clear" aria-label="Clear search" title="Clear" hidden>✕</button>
           </div>
-          <!-- Category Chips -->
           <div class="filter-chips" role="group" aria-label="Filter by category" id="filter-chips">
             <button class="filter-chip is-active" data-tag="all" id="chip-all">All</button>
           </div>
         </div>
-        <!-- No results message -->
         <p class="filter-no-results" id="filter-no-results" hidden>No events match your search.</p>
       </div>
     </section>
 
-    <!-- Timeline Section (populated by events-timeline.js) -->
-    <section id="timeline" class="timeline-section section-padding">
+    <!-- Option 4: event cards only -->
+    <section id="timeline" class="events-grid-section section-padding" aria-label="Events for academic year 2026–27">
       <div class="container">
-        <!-- Month blocks are injected here by events-timeline.js -->
-
-      </div>
-    </section>
-
-    <!-- All Events Section -->
-    <section id="all-events-section" class="all-events-section section-padding">
-      <div class="container">
-        <h2 class="all-events-title">All Events</h2>
-        <p class="all-events-subtitle">A complete record of our activities and programmes</p>
-        <div class="divider" style="margin: 16px auto 32px;"></div>
-        
-        <div class="table-responsive-wrapper">
-          <table class="events-table" id="events-table">
-            <thead>
-              <tr>
-                <th scope="col" style="width: 80px;">SR. NO.</th>
-                <th scope="col">EVENT NAME</th>
-                <th scope="col" style="width: 150px;">DATE</th>
-                <th scope="col" style="width: 180px;">CATEGORY</th>
-              </tr>
-            </thead>
-            <tbody id="events-table-body">
-              <!-- Dynamically populated rows -->
-            </tbody>
-          </table>
-        </div>
-        
-        <div class="toggle-btn-container">
-          <button id="toggle-events-btn" class="view-complete-btn">VIEW COMPLETE LIST</button>
-        </div>
+        <div class="events-grid" id="events-grid"></div>
       </div>
     </section>
 
